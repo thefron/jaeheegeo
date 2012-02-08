@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+require 'thin'
+
+rackup_file = "#{File.dirname(__FILE__)}/../config.ru"
+
+argv = ARGV
+argv << ["-R", rackup_file] unless ARGV.include?("-R")
+argv << ["-p", "4009"] unless ARGV.include?("-p")
+argv << ["-e", "production"] unless ARGV.include?("-e")
+Thin::Runner.new(argv.flatten).run!
