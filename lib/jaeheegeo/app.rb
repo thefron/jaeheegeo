@@ -7,9 +7,18 @@ module JaeheeGeo
       "Running\n"
     end
 
-    get '/geoip/:ip' do
-      content_type :json
-      JaeheeGeo::Geoip.new(params[:ip]).to_json
+    get '/geoip/:host' do
+      callback = params.delete('callback')
+      json = JaeheeGeo::Geoip.new(params[:host]).to_json
+      if callback
+        content_type :js
+        response = "#{callback}(#{json})"
+      else
+        content_type :json
+        response = json
+      end
+
+      response
     end
   end
 end
